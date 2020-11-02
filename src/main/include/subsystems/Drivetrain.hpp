@@ -21,6 +21,7 @@
 #include <frc/trajectory/TrajectoryConfig.h>
 #include <networktables/NetworkTableEntry.h>
 #include <networktables/NetworkTableInstance.h>
+#include <rev/CANSparkMax.h>
 #include <units/acceleration.h>
 #include <units/angle.h>
 #include <units/angular_velocity.h>
@@ -33,7 +34,6 @@
 #include "NetworkTableUtil.hpp"
 #include "controllers/DrivetrainController.hpp"
 #include "controllers/ImplicitModelFollower.hpp"
-#include "rev/CANSparkMax.hpp"
 #include "subsystems/ControlledSubsystemBase.hpp"
 
 namespace frc3512 {

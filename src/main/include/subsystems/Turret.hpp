@@ -12,6 +12,7 @@
 #include <frc/simulation/LinearSystemSim.h>
 #include <networktables/NetworkTableEntry.h>
 #include <networktables/NetworkTableInstance.h>
+#include <rev/CANSparkMax.h>
 #include <units/angle.h>
 #include <units/current.h>
 #include <units/voltage.h>
@@ -20,7 +21,6 @@
 #include "Constants.hpp"
 #include "NetworkTableUtil.hpp"
 #include "controllers/TurretController.hpp"
-#include "rev/CANSparkMax.hpp"
 #include "subsystems/ControlledSubsystemBase.hpp"
 
 namespace frc3512 {

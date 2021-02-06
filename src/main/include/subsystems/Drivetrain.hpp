@@ -38,6 +38,8 @@
 
 namespace frc3512 {
 
+class ScheduleLogger;
+
 /**
  * Drivetrain subsystem.
  */
@@ -46,7 +48,7 @@ public:
     static constexpr units::meter_t kLength = 0.9398_m;
     static constexpr units::meter_t kMiddleOfRobotToIntake = 0.656_m;
 
-    Drivetrain();
+    explicit Drivetrain(ScheduleLogger& schedLogger);
 
     Drivetrain(const Drivetrain&) = delete;
     Drivetrain& operator=(const Drivetrain&) = delete;
@@ -301,6 +303,7 @@ private:
     nt::NetworkTableEntry m_accelerationYOutputEntry =
         NetworkTableUtil::MakeDoubleEntry(
             "/Diagnostics/Drivetrain/Outputs/AccelerationY", 0.0);
+    ScheduleLogger* m_schedLogger;
 
     // Simulation variables
     frc::sim::DifferentialDrivetrainSim m_drivetrainSim{

@@ -71,6 +71,8 @@ Robot::Robot() {
     AddPeriodic(
         [=] {
             if (IsEnabled()) {
+                auto ctx = schedLogger.GetSchedContext(
+                    "Flywheel ControllerPeriodic()");
                 m_flywheel.ControllerPeriodic();
             }
         },
@@ -78,6 +80,8 @@ Robot::Robot() {
     AddPeriodic(
         [=] {
             if (IsEnabled()) {
+                auto ctx =
+                    schedLogger.GetSchedContext("Turret ControllerPeriodic()");
                 m_turret.ControllerPeriodic();
             }
         },
@@ -143,7 +147,9 @@ void Robot::TestInit() {
 }
 
 void Robot::RobotPeriodic() {
+    auto ctx = schedLogger.GetSchedContext("Robot::RobotPeriodic()");
     SubsystemBase::RunAllRobotPeriodic();
+    ctx.Destroy();
 
     auto batteryVoltage = frc::RobotController::GetInputVoltage();
     m_batteryLogger.Log(
@@ -175,6 +181,8 @@ void Robot::AutonomousPeriodic() {
 }
 
 void Robot::TeleopPeriodic() {
+    auto ctx = schedLogger.GetSchedContext("TeleopPeriodic()");
+
     SubsystemBase::RunAllTeleopPeriodic();
 
     static frc::Joystick appendageStick2{kAppendageStick2Port};

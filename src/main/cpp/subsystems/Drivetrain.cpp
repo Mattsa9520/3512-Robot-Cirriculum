@@ -14,6 +14,7 @@
 #include "CANSparkMaxUtil.hpp"
 #include "CurvatureDrive.hpp"
 #include "EigenFormat.hpp"
+#include "logging/ScheduleLogger.hpp"
 
 using namespace frc3512;
 using namespace frc3512::Constants::Robot;
@@ -24,7 +25,7 @@ const Eigen::Matrix<double, 2, 2> Drivetrain::kGlobalR =
 const frc::LinearSystem<2, 2, 2> Drivetrain::kPlant{
     DrivetrainController::GetPlant()};
 
-Drivetrain::Drivetrain()
+Drivetrain::Drivetrain(ScheduleLogger& schedLogger)
     : ControlledSubsystemBase(
           "Drivetrain",
           {ControllerLabel{"X", "m"}, ControllerLabel{"Y", "m"},
@@ -39,7 +40,9 @@ Drivetrain::Drivetrain()
            ControllerLabel{"Left position", "m"},
            ControllerLabel{"Right position", "m"},
            ControllerLabel{"Longitudinal Acceleration", "m/s^2"},
-           ControllerLabel{"Lateral Acceleration", "m/s^2"}}) {
+           ControllerLabel{"Lateral Acceleration", "m/s^2"}}),
+      m_controller{schedLogger},
+      m_schedLogger{&schedLogger} {
     SetCANSparkMaxBusUsage(m_leftLeader, Usage::kMinimal);
     SetCANSparkMaxBusUsage(m_leftFollower, Usage::kMinimal);
     SetCANSparkMaxBusUsage(m_rightLeader, Usage::kMinimal);
@@ -155,17 +158,27 @@ void Drivetrain::CorrectWithGlobalOutputs(units::meter_t x, units::meter_t y,
 }
 
 void Drivetrain::ControllerPeriodic() {
+    m_schedLogger->Epoch();
+
+    auto ctx1 = m_schedLogger->GetSchedContext("Drivetrain UpdateDt()");
     UpdateDt();
+    ctx1.Destroy();
 
+    auto ctx2 = m_schedLogger->GetSchedContext("Drivetrain Predict()");
     m_observer.Predict(m_u, GetDt());
+    ctx2.Destroy();
 
+    auto ctx3 = m_schedLogger->GetSchedContext("Drivetrain measurements");
     Eigen::Matrix<double, 5, 1> y;
     y << frc::AngleModulus(GetAngle()).to<double>(),
         GetLeftPosition().to<double>(), GetRightPosition().to<double>(),
         GetAccelerationX().to<double>(), GetAccelerationY().to<double>();
     m_latencyComp.AddObserverState(m_observer, m_controller.GetInputs(), y,
                                    frc2::Timer::GetFPGATimestamp());
+    ctx3.Destroy();
+    auto ctx4 = m_schedLogger->GetSchedContext("Drivetrain Correct()");
     m_observer.Correct(m_controller.GetInputs(), y);
+    ctx4.Destroy();
 
     if (m_controller.HaveTrajectory()) {
         m_u = m_controller.Calculate(m_observer.Xhat());

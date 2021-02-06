@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 
 #include "SimulatorTest.hpp"
+#include "logging/ScheduleLogger.hpp"
 #include "subsystems/Drivetrain.hpp"
 #include "subsystems/Flywheel.hpp"
 #include "subsystems/Intake.hpp"
@@ -12,7 +13,8 @@
 class IntakeTest : public frc3512::SimulatorTest {};
 
 TEST_F(IntakeTest, DeployTest) {
-    frc3512::Drivetrain drivetrain;
+    frc3512::ScheduleLogger logger;
+    frc3512::Drivetrain drivetrain{logger};
     frc3512::Flywheel flywheel{drivetrain};
     frc3512::Intake intake{flywheel};
 

@@ -172,6 +172,20 @@ public:
     void AutoRightSideShootSix();
 
     /**
+     * Follows either the red or blue path for Path A defined in the At-Home
+     * Challenges manual depending on input given by the ultrasonic for
+     * completing the Galactic Search Challenge.
+     */
+    void AutoGalacticSearchA();
+
+    /**
+     * Follows either the red or blue path for Path B defined in the At-Home
+     * Challenges manual depending on input given by the ultrasonic for
+     * completing the Galactic Search Challenge.
+     */
+    void AutoGalacticSearchB();
+
+    /**
      * Shoot three power cells from the initiation line in front of the allied
      * trench run, intake three balls in the trench run, intake two balls under
      * shield generator, then shoot all five.

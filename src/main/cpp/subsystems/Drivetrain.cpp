@@ -88,6 +88,10 @@ frc::Pose2d Drivetrain::GetPose() const {
         units::radian_t{x(DrivetrainController::State::kHeading)}};
 }
 
+units::meter_t Drivetrain::GetUltrasonicDistance() const {
+    return m_ultrasonicDistance;
+}
+
 units::radian_t Drivetrain::GetAngle() const {
     return units::degree_t{m_imu.GetAngle()} + m_headingOffset;
 }
@@ -281,6 +285,15 @@ void Drivetrain::TeleopInit() {
 void Drivetrain::RobotPeriodic() {
     using State = DrivetrainController::State;
     using Input = DrivetrainController::Input;
+
+    m_ultrasonicDistance = m_distanceFilter.Calculate(
+        units::volt_t{m_ultrasonic.GetVoltage()} * 1_m / 1_V);
+    m_ultrasonicOutputEntry.SetDouble(m_ultrasonicDistance.to<double>());
+
+    if constexpr (frc::RobotBase::IsSimulation()) {
+        m_ultrasonicDistance = m_distanceFilter.Calculate(
+            units::volt_t{m_ultrasonicSim.GetVoltage()} * 1_m / 1_V);
+    }
 
     const auto& xHat = m_observer.Xhat();
     m_xStateEntry.SetDouble(xHat(State::kX));

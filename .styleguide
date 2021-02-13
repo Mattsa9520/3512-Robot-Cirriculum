@@ -15,6 +15,7 @@ generatedFileExclude {
 }
 
 modifiableFileExclude {
+  Eigen/
   gradle/
   ADIS16470_IMU\.cpp$
   ADIS16470_IMU\.h$

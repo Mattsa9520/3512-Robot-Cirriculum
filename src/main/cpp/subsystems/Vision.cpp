@@ -5,6 +5,7 @@
 #include <chrono>
 #include <vector>
 
+#include <Eigen/Geometry>
 #include <frc/geometry/Pose2d.h>
 #include <frc/geometry/Transform2d.h>
 #include <frc2/Timer.h>
@@ -64,6 +65,10 @@ void Vision::ProcessNewMeasurement() {
 
     auto turretInGlobal =
         cameraInGlobal.TransformBy(kCameraInGlobalToTurretInGlobal);
+
+    // TODO: Rotate turretInGlobal with quaternion
+    Eigen::AngleAxis pitchAngle{72.0, Eigen::Vector3d::UnitY()};
+    Eigen::Quaternion<double> quaternion{pitchAngle};
 
     auto timestamp = frc2::Timer::GetFPGATimestamp();
     timestamp -= latency;

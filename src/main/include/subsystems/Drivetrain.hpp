@@ -239,7 +239,7 @@ private:
         DrivetrainController::Dynamics,
         DrivetrainController::LocalMeasurementModel,
         {0.002, 0.002, 0.0001, 1.5, 1.5, 0.5, 0.5},
-        {0.0001, 0.005, 0.005, 7.0, 7.0},
+        {0.0001, 0.005, 0.005, 2.0, 2.0},
         frc::AngleMean<7, 7>(2),
         frc::AngleMean<5, 7>(0),
         frc::AngleResidual<7>(2),

@@ -123,7 +123,7 @@ TEST_F(DrivetrainTest, CorrectsTowardGlobalY) {
 
     // Add measurement noise
     if constexpr (!kIdealModel) {
-        localY += frc::MakeWhiteNoiseVector(0.0001, 0.005, 0.005, 7.0, 7.0);
+        localY += frc::MakeWhiteNoiseVector(0.0001, 0.005, 0.005, 2.0, 2.0);
         globalY += frc::MakeWhiteNoiseVector(0.05, 0.05);
     }
 

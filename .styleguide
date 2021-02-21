@@ -16,6 +16,7 @@ generatedFileExclude {
 
 modifiableFileExclude {
   gradle/
+  sysid/
   ADIS16470_IMU\.cpp$
   ADIS16470_IMU\.h$
   Win32PipeImpl\.
@@ -34,6 +35,7 @@ includeOtherLibs {
   networktables/
   rev/.*?\.h$
   simulation/
+  sysid/
   units/
   unsupported/
   wpi/

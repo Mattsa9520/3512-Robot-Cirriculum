@@ -8,6 +8,7 @@
 #include <frc/TimedRobot.h>
 #include <frc/logging/CSVLogFile.h>
 #include <frc2/Timer.h>
+#include <sysid/telemetry/TelemetryManager.h>
 #include <units/time.h>
 
 #if RUNNING_FRC_TESTS
@@ -234,6 +235,8 @@ private:
     frc::CSVLogFile m_batteryLogger{"Battery", "Battery voltage (V)"};
     frc::CSVLogFile m_eventLogger{"Events", "Event"};
 
+    sysid::TelemetryManager::Settings m_settings;
+    sysid::TelemetryManager m_tlmManager{m_settings};
     nt::NetworkTableEntry m_batteryVoltageEntry =
         NetworkTableUtil::MakeDoubleEntry("/Diagnostics/Robot/batteryVoltage",
                                           0.0);

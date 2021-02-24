@@ -6,6 +6,7 @@
 #include <frc/LinearFilter.h>
 #include <frc/estimator/KalmanFilter.h>
 #include <frc/geometry/Pose2d.h>
+#include <frc/logging/CSVLogFile.h>
 #include <frc/simulation/EncoderSim.h>
 #include <frc/simulation/FlywheelSim.h>
 #include <frc/simulation/LinearSystemSim.h>
@@ -166,6 +167,9 @@ private:
     // Used in test mode for manually setting flywheel goal. This is helpful for
     // measuring flywheel lookup table values.
     double m_testThrottle = 0.0;
+
+    frc::CSVLogFile m_charData{"Flywheel characterization", "Input voltage (V)",
+                               "Angular velocity (rad/s)"};
 
     nt::NetworkTableEntry m_angularVelocityRefEntry =
         NetworkTableUtil::MakeDoubleEntry(

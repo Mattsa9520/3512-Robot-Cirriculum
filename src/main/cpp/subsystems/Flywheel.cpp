@@ -123,6 +123,14 @@ void Flywheel::RobotPeriodic() {
         auto manualRef = ThrottleToReference(m_testThrottle);
         m_manualAngularVelocityReferenceEntry.SetDouble(manualRef.to<double>());
         fmt::print("Manual angular velocity: {}\n", manualRef);
+
+        // 1. Remap input from [1..-1] to [0..1]
+        // 2. Rescale that to [0..12V]
+        // 3. Round to the nearest Volt
+        double u = std::round((1.0 - m_testThrottle) / 2.0 * 12.0);
+        SetVoltage(units::volt_t{u});
+        m_charData.Log(u * frc::RobotController::GetInputVoltage() / 12.0,
+                       GetAngularVelocity().to<double>());
     }
 }
 
@@ -150,7 +158,7 @@ void Flywheel::ControllerPeriodic() {
     y << GetAngularVelocity().to<double>();
     m_observer.Correct(m_controller.GetInputs(), y);
     m_u = m_controller.Calculate(m_observer.Xhat());
-    SetVoltage(units::volt_t{m_u(0)});
+    // SetVoltage(units::volt_t{m_u(0)});
 
     Log(m_controller.GetReferences(), m_observer.Xhat(), m_u, y);
 

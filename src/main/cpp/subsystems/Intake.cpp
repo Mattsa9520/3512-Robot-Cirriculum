@@ -31,7 +31,7 @@ bool Intake::IsDeployed() const {
 
 void Intake::Start() {
     SetArmMotor(ArmMotorDirection::kIntake);
-    SetFunnel(0.4);
+    SetFunnel(0.7);
 }
 
 void Intake::Stop() {
@@ -63,8 +63,7 @@ void Intake::RobotPeriodic() {
         if (m_flywheel.IsOn()) {
             if (m_flywheel.IsReady()) {
                 SetArmMotor(ArmMotorDirection::kIntake);
-            }
-            else {
+            } else {
                 SetArmMotor(ArmMotorDirection::kIdle);
             }
         } else {
@@ -84,7 +83,7 @@ void Intake::RobotPeriodic() {
         if (m_flywheel.IsOn() || IsLowerSensorBlocked()) {
             if (m_flywheel.IsReady() ||
                 (!m_flywheel.IsOn() && !IsUpperSensorBlocked() &&
-                IsLowerSensorBlocked())) {
+                 IsLowerSensorBlocked())) {
                 SetFunnel(0.4);
             } else {
                 SetFunnel(0.0);

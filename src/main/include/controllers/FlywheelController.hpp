@@ -3,7 +3,6 @@
 #pragma once
 
 #include <frc/controller/LinearPlantInversionFeedforward.h>
-#include <frc/controller/LinearQuadraticRegulator.h>
 #include <frc/estimator/KalmanFilter.h>
 #include <frc/system/LinearSystem.h>
 #include <units/angular_acceleration.h>
@@ -17,7 +16,7 @@
 
 namespace frc3512 {
 
-class FlywheelController : public ControllerBase<1, 1, 1> {
+class FlywheelController : public ControllerBase<2, 1, 1> {
 public:
     static constexpr auto kV = 0.009964_V / 1_rad_per_s;
     static constexpr auto kA = 0.00299_V / 1_rad_per_s_sq;
@@ -40,6 +39,7 @@ public:
     class State {
     public:
         static constexpr int kAngularVelocity = 0;
+        static constexpr int kInputError = 1;
     };
 
     /**
@@ -78,7 +78,7 @@ public:
     void Reset();
 
     Eigen::Matrix<double, 1, 1> Calculate(
-        const Eigen::Matrix<double, 1, 1>& x) override;
+        const Eigen::Matrix<double, 2, 1>& x) override;
 
     /**
      * Returns the flywheel plant.
@@ -90,8 +90,7 @@ private:
     static constexpr auto kAngularVelocityRecoveryThreshold = 5_rad_per_s;
 
     frc::LinearSystem<1, 1, 1> m_plant{GetPlant()};
-    frc::LinearQuadraticRegulator<1, 1> m_lqr{
-        m_plant, {20.0}, {12.0}, Constants::kDt};
+    Eigen::Matrix<double, 1, 2> m_K;
     frc::LinearPlantInversionFeedforward<1, 1> m_ff{m_plant, Constants::kDt};
 
     bool m_atGoal = false;

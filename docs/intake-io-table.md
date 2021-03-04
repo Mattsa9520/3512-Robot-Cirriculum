@@ -17,7 +17,7 @@ actuations for each input combination.
 |       true |          true |               true |              false |             No |           Intake |                No |             0.4 |              0.85 |
 |       true |          true |               true |               true |             No |           Intake |                No |             0.4 |              0.85 |
 
-Assign the output booleans based on the input conditions that make it true.
+Assign the output booleans based on the input conditions that make it true. Arm and Funnel Logic only apply during teleop shooting.
 ```
 allowTeleopArm = !flywheelOn
 allowTeleopFunnel = !flywheelOn && ((!upper && !lower) || (upper && !lower))
@@ -27,13 +27,14 @@ allowTeleopFunnel = !flywheelOn && ((!upper && !lower) || (upper && !lower))
 Arm logic:
 ```
 # if !allowTeleopArm:
-if flywheelOn:
-    if flywheelReady:
-        armAutoDirection = Intake
+if IsOperatorControlEnabled:
+    if flywheelOn:
+        if flywheelReady:
+            armAutoDirection = Intake
+        else:
+            armAutoDirection = Idle
     else:
-        armAutoDirection = Idle
-else:
-    # Do teleop arm
+        # Do teleop arm
 ```
 
 Funnel logic:
@@ -41,14 +42,15 @@ Funnel logic:
 # if !allowTeleopFunnel:
 # if !(!flywheelOn && !lower):
 # if !!flywheelOn || !!lower:
-if flywheelOn || lower:
-    # if (!flywheelOn && !flywheelReady && !upper && lower) || (flywheelReady):
-    if flywheelReady || (!flywheelOn && !upper && lower):
-        funnelAutoSpeed = 0.4
+if IsOperatorControlEnabled:
+    if flywheelOn || lower:
+        # if (!flywheelOn && !flywheelReady && !upper && lower) || (flywheelReady):
+        if flywheelReady || (!flywheelOn && !upper && lower):
+            funnelAutoSpeed = 0.4
+        else:
+            funnelAutoSpeed = 0.0
     else:
-        funnelAutoSpeed = 0.0
-else:
-    # Do teleop funnel
+        # Do teleop funnel
 ```
 
 Conveyor logic:

@@ -59,15 +59,16 @@ void Intake::RobotPeriodic() {
     static frc::Joystick appendageStick2{kAppendageStick2Port};
 
     // Arm logic
-    if (m_flywheel.IsOn()) {
-        if (m_flywheel.IsReady()) {
-            SetArmMotor(ArmMotorDirection::kIntake);
+    if (frc::DriverStation::GetInstance().IsOperatorControlEnabled()) {
+        if (m_flywheel.IsOn()) {
+            if (m_flywheel.IsReady()) {
+                SetArmMotor(ArmMotorDirection::kIntake);
+            }
+            else {
+                SetArmMotor(ArmMotorDirection::kIdle);
+            }
         } else {
-            SetArmMotor(ArmMotorDirection::kIdle);
-        }
-    } else {
-        // Manual control
-        if (frc::DriverStation::GetInstance().IsOperatorControlEnabled()) {
+            // Manual control
             if (appendageStick2.GetRawButton(4)) {
                 SetArmMotor(ArmMotorDirection::kIntake);
             } else if (appendageStick2.GetRawButton(6)) {
@@ -79,17 +80,17 @@ void Intake::RobotPeriodic() {
     }
 
     // Funnel logic
-    if (m_flywheel.IsOn() || IsLowerSensorBlocked()) {
-        if (m_flywheel.IsReady() ||
-            (!m_flywheel.IsOn() && !IsUpperSensorBlocked() &&
-             IsLowerSensorBlocked())) {
-            SetFunnel(0.4);
+    if (frc::DriverStation::GetInstance().IsOperatorControlEnabled()) {
+        if (m_flywheel.IsOn() || IsLowerSensorBlocked()) {
+            if (m_flywheel.IsReady() ||
+                (!m_flywheel.IsOn() && !IsUpperSensorBlocked() &&
+                IsLowerSensorBlocked())) {
+                SetFunnel(0.4);
+            } else {
+                SetFunnel(0.0);
+            }
         } else {
-            SetFunnel(0.0);
-        }
-    } else {
-        // Manual control
-        if (frc::DriverStation::GetInstance().IsOperatorControlEnabled()) {
+            // Manual control
             if (appendageStick2.GetRawButton(4)) {
                 SetFunnel(0.4);
             } else if (appendageStick2.GetRawButton(6)) {
